@@ -1,12 +1,10 @@
 #!env python
 
 """TCP Client for CST311 Programming Assignment 1"""
-__author__ = "[team name here]"
-__credits__ = [
-  "Your",
-  "Names",
-  "Here"
-]
+##__author__ = "MercuryCode"
+##__credits__ = [
+##  Ryan Wessel, Lenin Canio, Erin Smajdek, Valentina Hanna
+##]
 
 
 import socket as s
@@ -20,7 +18,8 @@ log.setLevel(logging.DEBUG)
 
 import TCPServer
 
-server_host = "localhost"
+server_host = "10.0.0.1"
+## port = 12000
 
 def main():
   
@@ -39,9 +38,8 @@ def main():
     
     # Connect our socket.  Notice that we pull server port directly from our TCPServer class.
     ## Q: Why is this step not in our UDP client?
-    socket.connect(
-      (server_host, TCPServer.SERVER_PORT)
-    )
+    socket.connect((server_host, TCPServer.SERVER_PORT))
+    ## socket.connect((server_host, port))
     
     # Send data, encoded as a UTF-8 bytestream
     socket.send(message.encode())
@@ -51,6 +49,7 @@ def main():
     response = socket.recv(1024)
     
     print ("From Server:", response.decode())
+    socket.close()
 
 if __name__ == "__main__":
   main()
