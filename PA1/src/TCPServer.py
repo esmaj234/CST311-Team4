@@ -1,12 +1,10 @@
 #!env python
 
 """TCP server for CST311 Programming Assignment 1"""
-__author__ = "[team name here]"
-__credits__ = [
-  "Your",
-  "Names",
-  "Here"
-]
+##__author__ = "MercuryCode"
+##__credits__ = [
+##  Ryan Wessel, Lenin Canio, Erin Smajdek, Valentina Hanna
+##]
 
 
 import socket as s
