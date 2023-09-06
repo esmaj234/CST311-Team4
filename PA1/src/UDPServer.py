@@ -1,11 +1,12 @@
 #! env python
 
 """UDP server for CST311 Programming Assignment 1"""
-__author__ = "[team name here]"
+__author__ = "Team 4"
 __credits__ = [
-  "Your",
-  "Names",
-  "Here"
+  "Erin Smajdek",
+  "Valentina Hanna",
+  "Ryqan Wessel",
+  "Lenin Canio"
 ]
 
 # Import the socket module as a named module to help keep our namespace clean
@@ -19,7 +20,7 @@ log.setLevel(logging.DEBUG)
 
 # Define a port to use above 1024
 ## Q: If we were to use 0 what would be the impact?
-SERVER_PORT = 12001
+SERVER_PORT = 2223
 
 
 def handle_client_request(server_socket, message, client_addr):
@@ -31,7 +32,7 @@ def handle_client_request(server_socket, message, client_addr):
   :return:
   """
   
-  log.debug("Recieved message: \"" + message + "\" from client @ \"" + client_addr + "\"")
+  log.debug("Recieved message: \"" + str(message) + "\" from client @ \"" + str(client_addr) + "\"")
   
   # Does two things:
   ## 1. decode message -- messages are transmitted as a UTF-8 bytestream so we have to decode them
