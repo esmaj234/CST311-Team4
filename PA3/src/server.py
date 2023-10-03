@@ -26,7 +26,7 @@ lock = threading.Lock()
 
 connection_semaphore = threading.Semaphore(2)
 
-def connection_handler(connection_socket, address):
+def connection_handler(connection_socket, address, client_id):
   # Read data from the new connectio socket
   # Note: if no data has been sent this blocks until there is data
   query = connection_socket.recv(1024)
@@ -35,7 +35,7 @@ def connection_handler(connection_socket, address):
   query_decoded = query.decode()
   
   # Log query information
-  log.info("Recieved query test \"" + str(query_decoded) + "\"")
+  log.info("Recieved query test \"" + str(query_decoded) + "\" from client " + client_id)
   
   # Perform some server operations on data to generate response
   time.sleep(10)
@@ -50,8 +50,18 @@ def connection_handler(connection_socket, address):
   
 def client_handler(connection_socket, address): 
   log.info("Connected to client at " + str(address))
+  
+  # Assign "X" or "Y" based on the order of connection
+  with lock:
+  	if not hasattr(client_handler, "client_count"):
+  		client_handler.client_count = 0
+  	
+  	client_handler.client_count += 1
+  	client_id = "X" if client_handler.client_count == 1 else "Y"
+  	
+  	
   # Pass the new socket and address off to a connection handler function
-  connection_handler(connection_socket, address)
+  connection_handler(connection_socket, address, client_id)
 
 
 def main():
@@ -65,6 +75,9 @@ def main():
   # Configure how many requests can be queued on the server at once
   server_socket.listen(2)
   
+  # Initialize a client counter
+  client_count = 0
+  
   # Alert user we are now online
   log.info("The server is ready to receive on port " + str(server_port))
   
@@ -76,6 +89,7 @@ def main():
     
       # When a client connects, create a new socket and record their address
       connection_socket, address = server_socket.accept()
+    
       t1 = threading.Thread(target=client_handler, args=(connection_socket,address))
       t1.start()
   finally:
