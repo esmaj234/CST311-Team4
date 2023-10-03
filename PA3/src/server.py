@@ -1,16 +1,18 @@
 #!env python
 
 """Chat server for CST311 Programming Assignment 3"""
-__author__ = "[team name here]"
+__author__ = "Team 4"
 __credits__ = [
-  "Your",
-  "Names",
-  "Here"
+  "Erin Smajdek",
+  "Ryan Wessel",
+  "Valentina Hanna",
+  "Lenin Canio"
 ]
 
 
 import socket as s
 import time
+import threading
 
 # Configure logging
 import logging
@@ -20,9 +22,13 @@ log.setLevel(logging.DEBUG)
 
 server_port = 12000
 
+lock = threading.Lock()
+
+connection_semaphore = threading.Semaphore(2)
+
 def connection_handler(connection_socket, address):
   # Read data from the new connectio socket
-  #  Note: if no data has been sent this blocks until there is data
+  # Note: if no data has been sent this blocks until there is data
   query = connection_socket.recv(1024)
   
   # Decode data from UTF-8 bytestream
@@ -41,6 +47,12 @@ def connection_handler(connection_socket, address):
   # Close client socket
   connection_socket.close()
   
+  
+def client_handler(connection_socket, address): 
+  log.info("Connected to client at " + str(address))
+  # Pass the new socket and address off to a connection handler function
+  connection_handler(connection_socket, address)
+
 
 def main():
   # Create a TCP socket
@@ -51,20 +63,21 @@ def main():
   server_socket.bind(('',server_port))
   
   # Configure how many requests can be queued on the server at once
-  server_socket.listen(1)
+  server_socket.listen(2)
   
   # Alert user we are now online
   log.info("The server is ready to receive on port " + str(server_port))
+  
   
   # Surround with a try-finally to ensure we clean up the socket after we're done
   try:
     # Enter forever loop to listen for requests
     while True:
+    
       # When a client connects, create a new socket and record their address
       connection_socket, address = server_socket.accept()
-      log.info("Connected to client at " + str(address))
-      # Pass the new socket and address off to a connection handler function
-      connection_handler(connection_socket, address)
+      t1 = threading.Thread(target=client_handler, args=(connection_socket,address))
+      t1.start()
   finally:
     server_socket.close()
 
