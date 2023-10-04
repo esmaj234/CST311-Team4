@@ -1,12 +1,12 @@
 #!env python
 
 """Chat client for CST311 Programming Assignment 3"""
-__author__ = "[team name here]"
+__author__ = "Team 4"
 __credits__ = [
-  "Your",
-  "Names",
-  "Here"
-]
+  "Erin Smajdek",
+  "Ryan Wessel",
+  "Valentina Hanna",
+  "Lenin Canio",
 
 # Import statements
 import socket as s
