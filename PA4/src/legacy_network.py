@@ -111,8 +111,10 @@ def myNetwork():
     makeTerm(node=h2, cmd='sudo mv chatserver-key.pem private')
     makeTerm(node=h2, cmd='sudo su')
     makeTerm(node=h2, cmd='chmod -R 600 private')
-    
-    makeTerm(node=h2, cmd='sudo python server.py')
+
+    # Run server.py in xterm
+    makeTerm(node=2, title='h2', term='xterm', display=None, cmd='sudo python server.py')
+
 
     CLI(net)
     net.stop()
