@@ -113,7 +113,7 @@ def myNetwork():
     makeTerm(node=h2, cmd='chmod -R 600 private')
 
     # Run server.py in xterm
-    makeTerm(node=2, title='h2', term='xterm', display=None, cmd='sudo python server.py')
+    makeTerm(node=h2, title='h2', term='xterm', display=None, cmd='sudo python server.py')
 
 
     CLI(net)
