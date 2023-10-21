@@ -24,13 +24,18 @@ log.setLevel(logging.DEBUG)
 server_port = 12000
 server_addr = '10.0.2.3'
 
-certfile = '/etc/ssl/demoCA/newcerts/chatserver-cert.pem'
-keyfile = '/etc/ssl/demoCA/private/chatserver-key.pem'
+ssl_key_file = "/etc/ssl/demoCA/private/cst311.test-key.pem"
+ssl_certificate_file = "/etc/ssl/demoCA/newcerts/cst311.test-cert.pem"
+client_cert_file = "/etc/ssl/demoCA/cacert.pem"
+
 
 # Context is the TLS protocol
 
-context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-context.load_cert_chain(certfile, keyfile)
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+context.verify_mode = ssl.CERT_REQUIRED
+context.load_cert_chain(certfile=ssl_certificate_file, keyfile=ssl_key_file)
+context.load_verify_locations(cafile=client_cert_file)
+context.keylog_filename="/home/mininet/CST311/tlskeylogfile"
 
 lock = threading.Lock()
 
