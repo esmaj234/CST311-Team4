@@ -48,10 +48,10 @@ def myNetwork():
     
 
     info( '*** Add hosts\n')
-    h1 = net.addHost('h1', cls=Host, ip='10.0.2.2/24', defaultRoute='via 10.0.2.1')
-    h2 = net.addHost('h2', cls=Host, ip='10.0.2.3/24', defaultRoute='via 10.0.2.1')
-    h3 = net.addHost('h3', cls=Host, ip='10.0.1.2/24', defaultRoute='via 10.0.1.1')
-    h4 = net.addHost('h4', cls=Host, ip='10.0.1.3/24', defaultRoute='via 10.0.1.1')
+    h1 = net.addHost('h1', cls=Host, ip='10.0.2.2/24', defaultRoute='via 10.0.2.0')
+    h2 = net.addHost('h2', cls=Host, ip='10.0.2.3/24', defaultRoute='via 10.0.2.0')
+    h3 = net.addHost('h3', cls=Host, ip='10.0.1.2/24', defaultRoute='via 10.0.1.0')
+    h4 = net.addHost('h4', cls=Host, ip='10.0.1.3/24', defaultRoute='via 10.0.1.0')
     
 
     info( '*** Add links\n')
@@ -62,7 +62,7 @@ def myNetwork():
     net.addLink(s2, r5)
     net.addLink(s1, r3)
     net.addLink(r3, r4, params1={'ip': '192.168.1.2/30'}, params2={'ip': '192.168.1.1/30'})
-    net.addLink(r4, r5, params1={'ip': '192.168.1.3/30'}, params2={'ip': '192.168.1.4/30'})
+    net.addLink(r4, r5, params1={'ip': '192.168.2.3/30'}, params2={'ip': '192.168.2.4/30'})
 
     info( '*** Starting network\n')
     net.build()
