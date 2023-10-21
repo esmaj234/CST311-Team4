@@ -9,6 +9,7 @@ from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 from mininet.link import TCLink, Intf
 from subprocess import call
+from mininet.term import makeTerm
 
 def myNetwork():
 
@@ -76,6 +77,30 @@ def myNetwork():
     info( '*** Post configure switches and hosts\n')
 
     net.build()
+    
+    
+    
+    # Create directories like we did in lab 6
+    
+    makeTerm(node=h2, cmd='sudo mkdir /etc/ssl/demoCA/newcerts')
+    makeTerm(node=h2, cmd='sudo mkdir /etc/ssl/demoCA/private')
+    
+    # Create server private key
+    makeTerm(node=h2, cmd='sudo openssl genrsa -out chatserver-key.pem 2048')
+    
+    # Create server certificate signing request
+    makeTerm(node=h2, cmd='sudo openssl req -nodes -new -config /etc/ssl/openssl.cnf -key chatserver-key.pem -out chatserver.csr -subj "/C=US/ST=CA/L=Seaside/O=CST311/OU=Networking/CN=chatserver-cert"')
+
+    makeTerm(node=h2, cmd='sudo openssl x509 -req -days 365 -in chatserver.csr -CA chatserver.pem -CAkey ./private/chatserver.pem -CAcreateserial -out chatserver-cert.pem')
+
+    
+    makeTerm(node=h2, cmd='sudo openssl x509 -req -days 365 -in chatserver.csr -CA chatserver.pem -CAkey ./private/chatserver.pem -CAcreateserial -out chatserver-cert.pem -extfile $HOME/CST311/extClient.cnf')
+    makeTerm(node=h2, cmd ='sudo mv chatserver-cert.pem newcerts')
+    makeTerm(node=h2, cmd='sudo mv chatserver-key.pem private')
+    makeTerm(node=h2, cmd='sudo su')
+    makeTerm(node=h2, cmd='chmod -R 600 private')
+    
+    makeTerm(node=h2, cmd='sudo python server.py')
 
     CLI(net)
     net.stop()
