@@ -104,10 +104,12 @@ def main():
     
       # When a client connects, create a new socket and record their address
       connection_socket, address = server_socket.accept()
+      secureConnSocket = context.wrap_socket(connection_socket, server_side=True)
     
-      t1 = threading.Thread(target=client_handler, args=(connection_socket,address))
+      t1 = threading.Thread(target=client_handler, args=(secureConnSocket,address))
       t1.start()
   finally:
+    secureConnSocket.close()
     server_socket.close()
 
 if __name__ == "__main__":
