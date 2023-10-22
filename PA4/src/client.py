@@ -12,6 +12,7 @@ __credits__ = [
 # Import statements
 import socket as s
 import ssl
+import sys
 
 # Configure logging
 import logging
@@ -20,7 +21,7 @@ log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 # Set global variables
-server_name = 'www.cst311.test'
+server_name = sys.argv[1]
 server_port = 12000
 
 def main():
@@ -55,7 +56,7 @@ def main():
     secureClientSocket.send(user_input.encode())
     
     # Read response from server
-    server_response = client_socket.recv(1024)
+    server_response = secureClientSocket.recv(1024)
     # Decode server response from UTF-8 bytestream
     server_response_decoded = server_response.decode()
     
@@ -65,6 +66,7 @@ def main():
     
   finally:
     # Close socket prior to exit
+    
     client_socket.close()
 
 # This helps shield code from running when we import the module
