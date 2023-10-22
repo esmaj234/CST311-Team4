@@ -15,6 +15,22 @@ from mininet.term import makeTerm
 
 def myNetwork():
 
+    cn_name_web = input('What should the CN name for the web server be? ')
+    cn_name_chat = input('What should the CN name for the chat server be? ')
+    
+    call(['sudo', 'openssl', 'genrsa', '-out', 'web-key.pem', '2048'])
+    call(['sudo', 'openssl', 'genrsa', '-out', 'chat-key.pem', '2048'])
+
+    
+    call(['sudo', 'openssl', 'req', '-new', '-config', '/etc/ssl/openssl.cnf', '-key', 'chat-key.pem', '-out', 'chat_req.csr', '-subj', f'/C=US/ST=CA/L=Seaside/O=CST311/OU=Networking/CN={cn_name_chat}'])
+    call(['sudo', 'openssl', 'req', '-new', '-config', '/etc/ssl/openssl.cnf', '-key', 'web-key.pem', '-out', 'web_req.csr', '-subj', f'/C=US/ST=CA/L=Seaside/O=CST311/OU=Networking/CN={cn_name_web}'])
+    
+    call(['sudo', 'openssl', 'x509', '-req', '-days', '365', '-in', 'chat_req.csr', '-CA', '/etc/ssl/demoCA/cacert.pem', '-CAkey', '/etc/ssl/demoCA/private/cakey.pem', '-CAcreateserial', '-out', 'chat-cert.pem'])
+    call(['sudo', 'openssl', 'x509', '-req', '-days', '365', '-in', 'web_req.csr', '-CA', '/etc/ssl/demoCA/cacert.pem', '-CAkey', '/etc/ssl/demoCA/private/cakey.pem', '-CAcreateserial', '-out', 'web-cert.pem'])
+    
+    host_file = open('/etc/hosts', 'a+')
+    host_file.write(f'10.0.1.3  {cn_name_web}\n10.0.2.3  {cn_name_chat}\n')
+
     net = Mininet( topo=None,
                    build=False,
                    ipBase='10.0.0.0/24')
@@ -91,13 +107,18 @@ def myNetwork():
     net.build()
     
 
-
     # Run server.py in xterm
     makeTerm(node=h4, title='h4', term='xterm', display=None, cmd='sudo python server.py')
-
+    makeTerm(node=h1, title='h1', term='xterm', display=None, cmd='sudo python client.py')
+    makeTerm(node=h3, title='h3', term='xterm', display=None, cmd='sudo python client.py')
+    makeTerm(node=h2, title='h2', term='xterm', display=None, cmd='sudo python tls_server.py')
+    
+    
 
     CLI(net)
     net.stop()
+    
+    net.stopXterms()
 
 if __name__ == '__main__':
     setLogLevel( 'info' )
