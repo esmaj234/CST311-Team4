@@ -93,7 +93,7 @@ def myNetwork():
 
 
     # Run server.py in xterm
-    makeTerm(node=h2, title='h2', term='xterm', display=None, cmd='sudo python server.py')
+    makeTerm(node=h4, title='h4', term='xterm', display=None, cmd='sudo python server.py')
 
 
     CLI(net)
