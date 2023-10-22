@@ -30,6 +30,7 @@ def myNetwork():
     
     host_file = open('/etc/hosts', 'a+')
     host_file.write(f'10.0.1.3  {cn_name_web}\n10.0.2.3  {cn_name_chat}\n')
+    host_file.close()
 
     net = Mininet( topo=None,
                    build=False,
@@ -108,10 +109,10 @@ def myNetwork():
     
 
     # Run server.py in xterm
-    makeTerm(node=h4, title='h4', term='xterm', display=None, cmd='sudo python server.py')
-    makeTerm(node=h1, title='h1', term='xterm', display=None, cmd='sudo python client.py')
-    makeTerm(node=h3, title='h3', term='xterm', display=None, cmd='sudo python client.py')
-    makeTerm(node=h2, title='h2', term='xterm', display=None, cmd='sudo python tls_server.py')
+    makeTerm(node=h4, title='h4', term='xterm', display=None, cmd=f'sudo python server.py {cn_name_chat}; bash')
+    makeTerm(node=h1, title='h1', term='xterm', display=None, cmd=f'sudo python client.py {cn_name_chat}; bash')
+    makeTerm(node=h3, title='h3', term='xterm', display=None, cmd=f'sudo python client.py {cn_name_chat}; bash')
+    makeTerm(node=h2, title='h2', term='xterm', display=None, cmd='sudo python tls_server.py; bash')
     
     
 
